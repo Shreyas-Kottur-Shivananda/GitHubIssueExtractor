@@ -1,0 +1,1284 @@
+Id, Title, Body Text, comments
+1580,Multiple un-equal stacks!,Sample: [sample.zip](https://github.com/soot-oss/soot/files/6266213/sample.zip)
+,
+1579,Fix crashes in AsmMethodSource(#1577,#1580),Fix: https://github.com/soot-oss/soot/issues/1577
+
+* `mergeIn()` should resolve the right `stack_n := @caughtException` when `nop` for `InlineExceptionHandler` appears.
+* `UnitContainer` may appear instead of `nop` for `InlineExceptionHandler`.
+
+Fix: https://github.com/soot-oss/soot/issues/1580
+
+* Replace `Edge.stack` with `Edge.stacks` and keep `stack`s in the same order as `edge`s in `worklist`.,
+1578,ConcurrentModificationException Issues when PackManager.lambda$writeOutput$,I encounter a ConcurrentModificationException problem when I use the latest version of soot(4.2.1) to instrument APK. The log info:
+`
+Exception in thread "Thread-25" java.util.ConcurrentModificationException
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:909)
+	at java.util.ArrayList$Itr.next(ArrayList.java:859)
+	at soot.toDex.DexPrinter.toMethods(DexPrinter.java:1087)
+	at soot.toDex.DexPrinter.addAsClassDefItem(DexPrinter.java:666)
+	at soot.toDex.DexPrinter.add(DexPrinter.java:1677)
+	at soot.PackManager.writeClass(PackManager.java:1096)
+	at soot.PackManager.lambda$writeOutput$1(PackManager.java:699)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+java.util.ConcurrentModificationException
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:909)
+	at java.util.ArrayList$Itr.next(ArrayList.java:859)
+	at soot.toDex.DexPrinter.toMethods(DexPrinter.java:1087)
+	at soot.toDex.DexPrinter.addAsClassDefItem(DexPrinter.java:666)
+	at soot.toDex.DexPrinter.add(DexPrinter.java:1677)
+	at soot.PackManager.writeClass(PackManager.java:1096)
+	at soot.PackManager.lambda$writeOutput$1(PackManager.java:699)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+`
+
+,
+1577,Crash in retriving body of method,Soot throws RuntimeException in retriving method body:
+
+```java
+java.lang.RuntimeException: Failed to convert <cn.com.chinatelecom.account.api.c.g: int h(android.content.Context)>
+	at soot.asm.AsmMethodSource.getBody(AsmMethodSource.java:2163)
+	at soot.SootMethod.retrieveActiveBody(SootMethod.java:402)
+	at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processNewMethod(OnFlyCallGraphBuilder.java:846)
+	at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processReachables(OnFlyCallGraphBuilder.java:313)
+	at soot.jimple.toolkits.callgraph.CallGraphBuilder.build(CallGraphBuilder.java:111)
+	at soot.jimple.toolkits.callgraph.CHATransformer.internalTransform(CHATransformer.java:51)
+	at soot.SceneTransformer.transform(SceneTransformer.java:36)
+	at soot.Transform.apply(Transform.java:102)
+	at soot.RadioScenePack.internalApply(RadioScenePack.java:68)
+	at soot.jimple.toolkits.callgraph.CallGraphPack.internalApply(CallGraphPack.java:58)
+	at soot.Pack.apply(Pack.java:117)
+	at soot.PackManager.runWholeProgramPacks(PackManager.java:611)
+	at soot.PackManager.runPacksNormally(PackManager.java:495)
+	at soot.PackManager.runPacks(PackManager.java:419)
+```
+
+This is sample file: [sample.zip](https://github.com/soot-oss/soot/files/6252213/sample.zip)
+
+,
+1576,how can make the variable name of soot dava to be real ,i use soot dava to decompile java .class file,but the result of this is 
+![image](https://user-images.githubusercontent.com/13100889/112802844-41a0e880-90a5-11eb-8dc4-ac32db9586ec.png)
+the  variable name is not real
+,
+1575,how can i get the methods from a inner class defined in a interface,Here's the code:
+public interface A{
+    class B{
+        public void function() {}
+    }
+}
+I was thinking I could get the methods from B by call some API in Class "SootClass",such as getMethod(String methodName),but the fact is it doesn't work.And another interesting thing I found is when I call Scene.v().getSootClass(),then I get the specific sootClass C.In this object,there is a field named refType,the attribute seems to be a recursive type,there is a field named sootClass which is the same sootClass as C,And it seems has very deep hierarchy.Hope someone can solve my problem.,
+1574,Add java.lang.Number as a basic class,When using soot on an Android.jar, java.lang.Float loaded from the classpath due to it being a basic class. In contrast, java.lang.Number is phantom because no_bodies_for_excluded is enabled and java.* is in the excluded packages. 
+
+As Android.jar only contains stubs, the value field is missing in java.lang.Float. Because the superclass is phantom, soot resolves the value field in java.lang.Number which is incorrect. 
+
+To force java.lang.Number to be not phantom, I added it to the basic classes. Locally tested using FlowDroid's and soot's tests. Seems fine.,
+1573,Faster implementation of canStoreClassClassic,Recursion tends to be slow.,
+1572,Improve javadoc for getSootClassUnsafe/getSootClass,I probably wouldn't have called the non-exception versions "unsafe" (unless I actually did), but let's improve the documentation to make it clear what the Unsafe version actually does.,
+1571,How to get types referenced  by a unit?,I'm trying to extract the types referenced in a unit from a method's CFG. For example, I want to extract `org.yliu.test.soot.Dod` for the unit below.
+```java
+$i0 = staticinvoke <org.yliu.test.soot.Dod: int m1(int)>(1)
+```
+I try the following code, but it can't return the types (`org.yliu.test.soot.Dod`).
+
+```java
+UnitGraph cfgGraph = new ExceptionalUnitGraph(b);
+Iterator < Unit > i = cfgGraph.iterator();
+while (i.hasNext()) {
+    Unit u = (Unit) i.next();
+    System.out.println(u);
+    List < ValueBox > boxes = u.getUseAndDefBoxes();
+    for (ValueBox vbox: boxes) {
+        System.out.println("value: " + vbox.getValue() +
+            ", type: " + vbox.getValue().getType());
+    }
+    System.out.println("****");
+}
+```
+The type is the type of method return value, not the type declaring the method.
+,
+1570,Android: How to inject unregistered sensor code into onPause() and resign the app?,Hi,
+I need to instrument the onPause() method of an activity class and add code to unregister sensors or listeners. Suppose that object l should be taken care of. How can I do that?
+
+`l.unregisterListener(this);`
+
+I know we should inject this code, assuming we are in last line of onPause(). How to inject and resign app?
+,[GHIssueComment@61ce23ac[body=First, you need to find the signature of `unregisterListener` and the locals corresponding to `l` and `this`. The local variable for `this` can be accessed by `body.getThisLocal()` where `body` is the JimpleBody of your target method. Then you need to create an `InvokeStmt` contains a `VirtualInvokeExpr` with the base local `l`, method `unregisterListener`, and argument `this`. 
+For more information on how to create such an `InvokeStmt` you can follow this [blog post](https://medium.com/swlh/instrumenting-android-apps-with-soot-dd6f146ff4d2) or this [wiki page](https://github.com/soot-oss/soot/wiki/Instrumenting-Android-Apps-with-Soot).,url=https://api.github.com/repos/soot-oss/soot/issues/comments/801262909,id=801262909,nodeId=MDEyOklzc3VlQ29tbWVudDgwMTI2MjkwOQ==,createdAt=2021-03-17T17:18:11Z,updatedAt=2021-03-17T17:18:11Z], GHIssueComment@ec2cc4[body=What if there is no lifecycle callback? Is it possible to inject lifecycle callback methods?(for example onPause()),url=https://api.github.com/repos/soot-oss/soot/issues/comments/812862084,id=812862084,nodeId=MDEyOklzc3VlQ29tbWVudDgxMjg2MjA4NA==,createdAt=2021-04-03T12:58:26Z,updatedAt=2021-04-03T12:58:26Z]]
+1569,Improve type assigner and introducing a flow-sensitive constant propagator,,[GHIssueComment@2a5b3fee[body=@mbenz89 @ericbodden 
+
+This PR is the output of a large-scale test of Soot's type assigner on Android apps from a 2021 PlayStore dump. The type assigner already has a ``UseChecker`` that verifies whether a typing is inconsistent, e.g., there are casts between types that are not cast-compatible. We found quite a few of these issues, with the respective method bodies being erroneuous accordingly. At the moment, Soot just ignores such issues, and unless your client analysis is very precise (e.g., checks typecasts), the problem remains hidden.
+
+The root cause of these typing issues is usually local splitting. When loading a Jimple body from dex, Dexpler first converts each register into a local. Since a register can first be used as type A and later as type B, there is no valid typing at this point. Therefore, Dexpler invokes the local splitter to establish different code-locals for independent use/def clusters of the same register-local. Afterwards, the local types are consistent and the type assigner can do its work. So far so good. Now let's take the following simplified code:
+
+``
+u0 = 0
+if (...) goto l0:
+// use u0 as boolean
+goto l1;
+l0:
+// use u0 as int
+l1:
+```
+
+This code is perfectly fine in the Dalvik VM, because the intialization value 0 is both an integer and a boolean value, and once it has been used in one of the two contexts, the code is consistent with its runtime typing. Soot's local splitter will not split anything, because the two uses depend on the same definition. Therefore, type assignment fails. Local ``u0`` cannot be an intger and  boolean at the same type, and the two types do not have a common ancestor. There is no valid typing for ``u0``,  and we cannot resolve the issue by introducing typecasts.
+
+The solution is to split the constant initialization into two statements:
+
+``
+u0 = 0
+u1 = 0
+if (...) goto l0:
+// use u0 as boolean
+goto l1;
+l0:
+// use u1 as int
+l1:
+```
+
+Note that we identify exactly those cases where the only shared definition is a side effect-free constant assignment that we can safely duplicte. Also note that there is never a join point where we would need ``u0`` and ``u1`` to be the same local, since such code would semantially be wrong and be rejected by the runtime type checks of the Dalvik VM.
+
+This brings us into the problem of detecting constant initializations, and that's why we had to improve the constant propagator quite a bit. We have tested the changes on a large set of apps and are quite confident that we didn't break any obvious stuff.
+
+The Dexpler frontend already did quite a few transformations before this change, so I don't consider it a problem that we now even do more, i.e., the constant propagator will optimize away trivial operations.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/798969337,id=798969337,nodeId=MDEyOklzc3VlQ29tbWVudDc5ODk2OTMzNw==,createdAt=2021-03-14T19:57:11Z,updatedAt=2021-03-14T19:57:11Z]]
+1568,Replace with concurrent hash set,,
+1567,java.lang.RuntimeException when ...,Steps to reproduce:
+1.) ...
+
+Files used to reproduce: 
+...
+
+Soot version: <pre>trunk</pre>
+
+Command line:
+<pre>-allow-phantom-refs -process-dir /var/folders/59/zzy09n_952x6dcd1r_8610mh0000gn/T/tmp59lmfgpi/WEB-INF/classes/ -f class -O -d /var/folders/59/zzy09n_952x6dcd1r_8610mh0000gn/T/tmps685fb8n</pre>
+
+Max Memory:
+<pre>2048MB</pre>
+
+Stack trace:
+<pre>java.lang.RuntimeException: None of the basic classes could be loaded! Check your Soot class path!
+	at soot.Scene.loadBasicClasses(Scene.java:1753)
+	at soot.Scene.loadNecessaryClasses(Scene.java:1843)
+	at soot.Main.run(Main.java:241)
+	at soot.Main.main(Main.java:141)
+</pre>,
+1566,java.lang.RuntimeException when ...,Steps to reproduce:
+1.) ...
+
+Files used to reproduce: 
+...
+
+Soot version: <pre>trunk</pre>
+
+Command line:
+<pre>-allow-phantom-refs -process-dir /var/folders/59/zzy09n_952x6dcd1r_8610mh0000gn/T/tmp7ph3r45s/WEB-INF/classes/ -f class -O -d /var/folders/59/zzy09n_952x6dcd1r_8610mh0000gn/T/tmp2mb65o25</pre>
+
+Max Memory:
+<pre>2048MB</pre>
+
+Stack trace:
+<pre>java.lang.RuntimeException: Error: cannot find rt.jar.
+	at soot.Scene.defaultJavaClassPath(Scene.java:711)
+	at soot.Scene.defaultClassPath(Scene.java:562)
+	at soot.Scene.getSootClassPath(Scene.java:294)
+	at soot.SourceLocator.getClassSource(SourceLocator.java:168)
+	at soot.Scene.tryLoadClass(Scene.java:900)
+	at soot.Scene.loadBasicClasses(Scene.java:1652)
+	at soot.Scene.loadNecessaryClasses(Scene.java:1738)
+	at soot.Main.run(Main.java:241)
+	at soot.Main.main(Main.java:141)
+</pre>,
+1565,java.lang.RuntimeException when ...,Steps to reproduce:
+1.) ...
+
+Files used to reproduce: 
+...
+
+Soot version: <pre>trunk</pre>
+
+Command line:
+<pre>-allow-phantom-refs -process-dir /var/folders/59/zzy09n_952x6dcd1r_8610mh0000gn/T/tmp7ph3r45s/WEB-INF/classes/ -f class -O -d /var/folders/59/zzy09n_952x6dcd1r_8610mh0000gn/T/tmp2mb65o25</pre>
+
+Max Memory:
+<pre>2048MB</pre>
+
+Stack trace:
+<pre>java.lang.RuntimeException: Error: cannot find rt.jar.
+	at soot.Scene.defaultJavaClassPath(Scene.java:711)
+	at soot.Scene.defaultClassPath(Scene.java:562)
+	at soot.Scene.getSootClassPath(Scene.java:294)
+	at soot.SourceLocator.getClassSource(SourceLocator.java:168)
+	at soot.Scene.tryLoadClass(Scene.java:900)
+	at soot.Scene.loadBasicClasses(Scene.java:1652)
+	a,
+1564,Fix for #1562,If the option ignore-resolution-errors is enabled Soot should not fail when super class does not exist. This can happen when some library generates classes that land in the Scene as non phantom. Hence, it can happen that some of them have incomplete hierarchy (Soot throws exception when super class is not found). 
+This is fix for ticket #1562,[GHIssueComment@3401a114[body=@piskachev look fine to me! Have you tested if allowing `null` as superclass does not lead to errors elsewhere?,url=https://api.github.com/repos/soot-oss/soot/issues/comments/788987241,id=788987241,nodeId=MDEyOklzc3VlQ29tbWVudDc4ODk4NzI0MQ==,createdAt=2021-03-02T15:22:02Z,updatedAt=2021-03-02T15:22:02Z], GHIssueComment@5066d65f[body=> @piskachev look fine to me! Have you tested if allowing `null` as superclass does not lead to errors elsewhere?
+
+yes, tested! To make sure it does not fails, should I add the same condition (`&& !Options.v().ignore_resolution_errors()`) also in BytecodeHierarchy:75 ? 
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/789009122,id=789009122,nodeId=MDEyOklzc3VlQ29tbWVudDc4OTAwOTEyMg==,createdAt=2021-03-02T15:52:42Z,updatedAt=2021-03-02T15:53:20Z], GHIssueComment@4233e892[body=>yes, tested! To make sure it does not fails, should I add the same condition (&& !Options.v().ignore_resolution_errors()) also in BytecodeHierarchy:75 ?
+
+Yes. That would be good. Thereby, we at least do not break any assumption when having `!Options.v().ignore_resolution_errors()`,url=https://api.github.com/repos/soot-oss/soot/issues/comments/789063074,id=789063074,nodeId=MDEyOklzc3VlQ29tbWVudDc4OTA2MzA3NA==,createdAt=2021-03-02T17:07:25Z,updatedAt=2021-03-02T17:07:25Z], GHIssueComment@77d2e85[body=I added the change. 
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/789145822,id=789145822,nodeId=MDEyOklzc3VlQ29tbWVudDc4OTE0NTgyMg==,createdAt=2021-03-02T19:12:21Z,updatedAt=2021-03-02T19:12:21Z]]
+1563,encounter java.lang.NullPointerException while using soot-2.5.0 processing .java file,First time using soot, fail to processing .java files and here's my command
+_[root@localhost soottest]# java -jar soot-2.5.0.jar -cp . -pp A B_
+with trace
+_Soot started on Fri Feb 26 23:43:32 PST 2021
+Exception in thread "main" java.lang.NullPointerException
+	at soot.JastAddInitialResolver.resolveFromJavaFile(JastAddInitialResolver.java:103)
+	at soot.JavaClassSource.resolve(JavaClassSource.java:57)
+	at soot.SootResolver.bringToHierarchy(SootResolver.java:215)
+	at soot.SootResolver.bringToSignatures(SootResolver.java:239)
+	at soot.SootResolver.processResolveWorklist(SootResolver.java:154)
+	at soot.SootResolver.resolveClass(SootResolver.java:124)
+	at soot.Scene.loadClass(Scene.java:448)
+	at soot.Scene.loadClassAndSupport(Scene.java:433)
+	at soot.Scene.loadNecessaryClass(Scene.java:1053)
+	at soot.Scene.loadNecessaryClasses(Scene.java:1067)
+	at soot.Main.run(Main.java:167)
+	at soot.Main.main(Main.java:141)_
+this directory has three files
+_[root@localhost soottest]# ls
+A.java  B.java  soot-2.5.0.jar_,
+1562,Soot fails due to not found super class ,While Jimple is constructed there is a case where Soot fails at [this point](https://github.com/soot-oss/soot/blob/59931576784b910a7d38f81910b7313aa2feafea/src/main/java/soot/SootClass.java#L892).
+
+The example trace is below. What is happening is that some classes get generated and we are missing them on the classpath so Soot does not find them. Even though the phantom option is enabled some of them as you see are not phantom and this exception occurs. 
+
+How can we handle such cases? Is it possible to relax the condition when super class is not found? 
+It is better to have incomplete hierarchy as long as Soot does not crashes.  
+
+------------------------------------------------------
+Caused by: java.lang.RuntimeException: Failed to apply jb to <some.Mod: java.util.List getAuthorizers(java.lang.String,java.lang.String)>
+    at soot.asm.AsmMethodSource.getBody(AsmMethodSource.java:2191) 
+    at soot.SootMethod.retrieveActiveBody(SootMethod.java:402) 
+    at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processNewMethod(OnFlyCallGraphBuilder.java:812) 
+    at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processReachables(OnFlyCallGraphBuilder.java:286) 
+    at soot.jimple.toolkits.callgraph.CallGraphBuilder.build(CallGraphBuilder.java:111) 
+    at soot.jimple.toolkits.callgraph.CHATransformer.internalTransform(CHATransformer.java:51) 
+    at soot.SceneTransformer.transform(SceneTransformer.java:36) 
+    at soot.Transform.apply(Transform.java:102) 
+    at soot.RadioScenePack.internalApply(RadioScenePack.java:68) 
+    at soot.jimple.toolkits.callgraph.CallGraphPack.internalApply(CallGraphPack.java:58) 
+    at soot.Pack.apply(Pack.java:117) 
+    at utils.SootRunner.run(SootRunner.java:137) 
+    at some.Runner.runTransforms(Runner.java:111) 
+    ... 6 more
+Caused by: java.lang.RuntimeException: no superclass for some.Interface
+    at soot.SootClass.getSuperclass(SootClass.java:897) 
+    at soot.jimple.toolkits.typing.fast.BytecodeHierarchy.buildAncestryTree(BytecodeHierarchy.java:76) 
+    at soot.jimple.toolkits.typing.fast.BytecodeHierarchy.lcas_(BytecodeHierarchy.java:174) 
+    at soot.jimple.toolkits.typing.fast.BytecodeHierarchy.lcas(BytecodeHierarchy.java:292) 
+    at soot.jimple.toolkits.typing.fast.TypeResolver.applyAssignmentConstraints(TypeResolver.java:544) 
+    at soot.jimple.toolkits.typing.fast.TypeResolver.inferTypes(TypeResolver.java:148) 
+    at soot.jimple.toolkits.typing.TypeAssigner.internalTransform(TypeAssigner.java:121) 
+    at soot.BodyTransformer.transform(BodyTransformer.java:51) 
+    at soot.Transform.apply(Transform.java:120) 
+    at soot.JimpleBodyPack.applyPhaseOptions(JimpleBodyPack.java:73) 
+    at soot.JimpleBodyPack.internalApply(JimpleBodyPack.java:105) 
+    at soot.Pack.apply(Pack.java:125) 
+    at soot.asm.AsmMethodSource.getBody(AsmMethodSource.java:2189) 
+    at soot.SootMethod.retrieveActiveBody(SootMethod.java:402) 
+    at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processNewMethod(OnFlyCallGraphBuilder.java:812) 
+    at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processReachables(OnFlyCallGraphBuilder.java:286) 
+    at soot.jimple.toolkits.callgraph.CallGraphBuilder.build(CallGraphBuilder.java:111) 
+    at soot.jimple.toolkits.callgraph.CHATransformer.internalTransform(CHATransformer.java:51) 
+    at soot.SceneTransformer.transform(SceneTransformer.java:36) 
+    at soot.Transform.apply(Transform.java:102) 
+    at soot.RadioScenePack.internalApply(RadioScenePack.java:68) 
+    at soot.jimple.toolkits.callgraph.CallGraphPack.internalApply(CallGraphPack.java:58) 
+    at soot.Pack.apply(Pack.java:117)
+    at utils.SootRunner.run(SootRunner.java:137) 
+    at x.y.Z.runTransforms(Runner.java:111) 
+    ... 6 more,[GHIssueComment@555cf22[body=Hi all. Goran does some.Interface actually have a superclass in the bytecode? Or is the bytecode broken?,url=https://api.github.com/repos/soot-oss/soot/issues/comments/786020888,id=786020888,nodeId=MDEyOklzc3VlQ29tbWVudDc4NjAyMDg4OA==,createdAt=2021-02-25T16:16:11Z,updatedAt=2021-02-25T16:16:11Z], GHIssueComment@6bb2d00b[body=@piskachev there is an option "-ignore-resolution-errors", I think. Did you try to enable this? If this still does not work, then we should guard the throw-Statement at at soot.SootClass.getSuperclass(SootClass.java:897) such that it silently ignores the error if and only if this option is enabled.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/786030780,id=786030780,nodeId=MDEyOklzc3VlQ29tbWVudDc4NjAzMDc4MA==,createdAt=2021-02-25T16:30:03Z,updatedAt=2021-02-25T16:30:03Z], GHIssueComment@3c9bfddc[body=Thanks for the hint, @ericbodden! 
+Indeed the option was not enabled. But still the guard is necessary as Soot will still fail at that point. I added this change and created the pull request. ,url=https://api.github.com/repos/soot-oss/soot/issues/comments/788883220,id=788883220,nodeId=MDEyOklzc3VlQ29tbWVudDc4ODg4MzIyMA==,createdAt=2021-03-02T12:46:26Z,updatedAt=2021-03-02T12:46:49Z], GHIssueComment@1a9c38eb[body=This is a valid solution to the problem. I think in the long run, however, we should generate phantom superclasses for non-phantom classes for which we do not know the super class.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/788986745,id=788986745,nodeId=MDEyOklzc3VlQ29tbWVudDc4ODk4Njc0NQ==,createdAt=2021-03-02T15:21:23Z,updatedAt=2021-03-02T15:21:23Z], GHIssueComment@319bc845[body=The pull request contains more changes than required, please check @piskachev ,url=https://api.github.com/repos/soot-oss/soot/issues/comments/789670156,id=789670156,nodeId=MDEyOklzc3VlQ29tbWVudDc4OTY3MDE1Ng==,createdAt=2021-03-03T12:10:45Z,updatedAt=2021-03-03T12:10:45Z], GHIssueComment@4c5474f5[body=This is now merged and works. Im closing the issue. ,url=https://api.github.com/repos/soot-oss/soot/issues/comments/789737483,id=789737483,nodeId=MDEyOklzc3VlQ29tbWVudDc4OTczNzQ4Mw==,createdAt=2021-03-03T14:05:13Z,updatedAt=2021-03-03T14:05:13Z]]
+1561,RuntimeException: Trying to create interface invoke expression for non-interface type,Hi, I am using Soot:4.2.1 to analyse the weblogic's **wlthint3client.jar** on JDK8u242. But when soot run packs, it throws a RuntimeException.
+Here is the detail:
+```
+java.lang.IllegalStateException: Failed to execute CommandLineRunner
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798) [spring-boot-2.3.4.RELEASE.jar!/:2.3.4.RELEASE]
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:779) [spring-boot-2.3.4.RELEASE.jar!/:2.3.4.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:322) [spring-boot-2.3.4.RELEASE.jar!/:2.3.4.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1237) [spring-boot-2.3.4.RELEASE.jar!/:2.3.4.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1226) [spring-boot-2.3.4.RELEASE.jar!/:2.3.4.RELEASE]
+	at tabby.TabbyApplication.main(TabbyApplication.java:43) [classes!/:1.0.0-SNAPSHOT]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_242]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_242]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_242]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_242]
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) [tabby-1.0.0-SNAPSHOT.jar:1.0.0-SNAPSHOT]
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:107) [tabby-1.0.0-SNAPSHOT.jar:1.0.0-SNAPSHOT]
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) [tabby-1.0.0-SNAPSHOT.jar:1.0.0-SNAPSHOT]
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88) [tabby-1.0.0-SNAPSHOT.jar:1.0.0-SNAPSHOT]
+Caused by: java.lang.RuntimeException: Failed to convert <weblogic.jndi.WLInitialContextFactoryDelegate: weblogic.security.acl.internal.AuthenticatedSubject authenticateLocally(weblogic.security.acl.UserInfo)>
+	at soot.asm.AsmMethodSource.getBody(AsmMethodSource.java:2163) ~[soot-4.2.1.jar!/:na]
+	at soot.SootMethod.retrieveActiveBody(SootMethod.java:402) ~[soot-4.2.1.jar!/:na]
+	at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processNewMethod(OnFlyCallGraphBuilder.java:846) ~[soot-4.2.1.jar!/:na]
+	at soot.jimple.toolkits.callgraph.OnFlyCallGraphBuilder.processReachables(OnFlyCallGraphBuilder.java:313) ~[soot-4.2.1.jar!/:na]
+	at soot.jimple.toolkits.callgraph.CallGraphBuilder.build(CallGraphBuilder.java:111) ~[soot-4.2.1.jar!/:na]
+	at soot.jimple.toolkits.callgraph.CHATransformer.internalTransform(CHATransformer.java:51) ~[soot-4.2.1.jar!/:na]
+	at soot.SceneTransformer.transform(SceneTransformer.java:36) ~[soot-4.2.1.jar!/:na]
+	at soot.Transform.apply(Transform.java:102) ~[soot-4.2.1.jar!/:na]
+	at soot.RadioScenePack.internalApply(RadioScenePack.java:68) ~[soot-4.2.1.jar!/:na]
+	at soot.jimple.toolkits.callgraph.CallGraphPack.internalApply(CallGraphPack.java:58) ~[soot-4.2.1.jar!/:na]
+	at soot.Pack.apply(Pack.java:117) ~[soot-4.2.1.jar!/:na]
+	at soot.PackManager.runWholeProgramPacks(PackManager.java:611) ~[soot-4.2.1.jar!/:na]
+	at soot.PackManager.runPacksNormally(PackManager.java:495) ~[soot-4.2.1.jar!/:na]
+	at soot.PackManager.runPacks(PackManager.java:419) ~[soot-4.2.1.jar!/:na]
+	at tabby.core.Analyser.runSootAnalysis(Analyser.java:70) ~[classes!/:1.0.0-SNAPSHOT]
+	at tabby.TabbyApplication.lambda$run$0(TabbyApplication.java:92) [classes!/:1.0.0-SNAPSHOT]
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:795) [spring-boot-2.3.4.RELEASE.jar!/:2.3.4.RELEASE]
+	... 13 common frames omitted
+Caused by: java.lang.RuntimeException: Trying to create interface invoke expression for non-interface type: weblogic.security.service.PrincipalAuthenticator Use JVirtualInvokeExpr or JSpecialInvokeExpr instead!
+	at soot.jimple.internal.JInterfaceInvokeExpr.<init>(JInterfaceInvokeExpr.java:45) ~[soot-4.2.1.jar!/:na]
+	at soot.jimple.Jimple.newInterfaceInvokeExpr(Jimple.java:491) ~[soot-4.2.1.jar!/:na]
+	at soot.asm.AsmMethodSource.convertMethodInsn(AsmMethodSource.java:1398) ~[soot-4.2.1.jar!/:na]
+	at soot.asm.AsmMethodSource.convert(AsmMethodSource.java:1907) ~[soot-4.2.1.jar!/:na]
+	at soot.asm.AsmMethodSource.getBody(AsmMethodSource.java:2161) ~[soot-4.2.1.jar!/:na]
+```
+The **PrincipalAuthenticator** class is actually a normal class, but soot try to create a interfaceInvoke.
+How can I deal with this exception? Is there a way to ignore this exception, so that I can continue to analyse the Jar?
+And you can download the jar from [wlthint3client.jar](https://drive.google.com/file/d/1V75rcNQvX5K-COTAKrDffvGQ6zvnpQPC/view?usp=sharing),
+1560,InterfaceInvoke is not included in the call graph,Suppose I have a class A and an interface I
+```
+public class A {
+  public void foo(I i) {
+    too();
+    i.zoo();
+  }
+  public void too() {}
+}
+
+interface I {
+  public void zoo();
+}
+```
+In the above example, if I searches in the call graph for what `foo` invokes, I can only find `too`
+```
+CHATransformer.v().transform();
+cg = Scene.v().getCallGraph();
+Iterator<Edge> itor = cg.iterator();
+while(itor.hasNext()) {
+  Edge e = itor1.next();
+  if(e.src().getDeclaringClass().getName().equals("A") && e.src().getName().equals("foo")) System.out.println(e);
+}
+```
+
+The output is `VIRTUAL edge: virtualinvoke r0.<A: void too()>() in <A: void foo(I)> ==> <A: void too()>`
+
+If I add a class that implements `I`
+```
+class D implements I {
+  public void zoo() {}
+}
+```
+
+This time I can find the invocation of `zoo` in `foo`. The output is
+```
+VIRTUAL edge: virtualinvoke r0.<A: void too()>() in <A: void foo(I)> ==> <A: void too()>
+INTERFACE edge: interfaceinvoke r1.<I: void zoo()>() in <A: void foo(I)> ==> <D: void zoo()>
+```
+
+The miss of interface invoke in the first case is a problem in many event-driven programs like Android apps. For example, here is a callback function of WebView:
+
+```.
+public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) { 
+  request.getUrl();  
+}
+```
+`request.getUrl()` is an interface invoke and developers usually do not override it. Therefore it is not included in the out edges of `shouldOverrideUrlLoading`.
+
+,[GHIssueComment@2f4205be[body=I find more errors. Not only InterfaceInvoke edges but also VirtualInvoke edges can be missed. For example
+```
+protected void onCreate(Bundle savedInstanceState) {
+  webview.getSettings().setJavaScriptEnabled(true);
+}
+```
+
+I can only find `onCreate()` => `getSettings()`. `onCreate()` => `setJavaScriptEnabled ()` is not included in the built call graph
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/785052671,id=785052671,nodeId=MDEyOklzc3VlQ29tbWVudDc4NTA1MjY3MQ==,createdAt=2021-02-24T12:50:10Z,updatedAt=2021-02-24T12:50:10Z]]
+1559,Use unsychronized list for packs,Packs are usually not modified in different threads, but often accessed for read (e.g. for each body). However, even concurrent read access is blocked/synchronized at the moment due to the usage of chains.,
+1558,Try to make typing faster,,
+1557,Improve typing,,
+1556,Are there any APIs that can identify the field in an inner class that refer to the instance of the outer class?,Suppose I have a class A and its inner class C
+```
+public class A {
+  class C {
+    public C() {}
+  }
+}
+```
+
+The jimple code of C's constructor is
+```
+public void <init>(A)
+{
+      A$C r0;
+      A r1;
+      r0 := @this: A$C;
+      r1 := @parameter0: A;
+      r0.<A$C: A this$0> = r1;
+      specialinvoke r0.<java.lang.Object: void <init>()>();
+      return;
+}
+```
+
+I observed there is field reference `r0.<A$C: A this$0>` that refers to the instance of the outer class of C. Are there any APIs in Soot that can help me identify such field? I scanned through the API doc of `SootField` but I couldn't find any APIs for my purpose. So far I can only use the field name like `this$0` to identify such field. 
+
+,
+1555,RuntimeException: None of the basic classes could be loaded!,I am getting this exception:
+
+```
+java.lang.RuntimeException: None of the basic classes could be loaded! Check your Soot class path!
+```
+
+When running this code:
+
+```Java
+public static SootClass loadClass(ClassToVerify c){
+		// reset previously loaded classes (important for consecutive analysis)
+		logger.info("Resetting Soot.");
+		G.reset();
+
+		// Loading classes roughly follows this example:
+		// https://github.com/Sable/heros/wiki/Example:-Using-Heros-with-Soot
+
+		// construct classpath to use when loading the examples
+		String javaHome = Configuration.props.getSootJavaHome(); // /usr/lib/jvm/java-13-openjdk-amd64
+		if (javaHome == null) {
+			logger.error("JAVA_HOME not set: " + javaHome);
+		}
+		String classpath = c.getClassPath().toString();
+		// set classpath:
+		logger.debug("Soot classpath:" + classpath); // Soot classpath: /analysis/target/test-classes
+		Options.v().set_process_dir(new ArrayList<String>(Collections.singletonList(classpath)));
+		Options.v().set_soot_classpath(classpath);
+
+		// Enable whole-program mode
+		Options.v().set_whole_program(true);
+		Options.v().set_app(true);
+
+		Options.v().set_allow_phantom_refs(true);
+
+		// produce more detailed output (helpful for debugging purposes)
+		Options.v().set_verbose(true);
+
+		// load the class
+		String mainClass = c.getPackageName();
+		logger.info("Loading {} into Soot", mainClass); // Loading x.y.z.MyClass into Soot
+
+		// Set the main class of the application to be analysed
+		Options.v().set_main_class(mainClass);
+
+		// Load the main class
+		SootClass sc = Scene.v().loadClass(mainClass, SootClass.BODIES);
+		sc.setApplicationClass();
+
+		Scene.v().setEntryPoints(sc.getMethods());
+
+		Scene.v().loadNecessaryClasses(); // RuntimeException
+
+		return sc;
+	}
+```
+
+I am running Java 13, and the class to be analyzed was also compiled with Java 13. I could compile the class I am analyzing with Java 8 if necessary.
+
+Any help is appreciated!,[GHIssueComment@54e22bdd[body=I am still unable to resolve this issue. Does Soot even support Java 13 (as in, running Soot on Java 13, analyzing code compiled by Java 13, but the analyzed code only uses Java 8 features)?
+
+Is there any additional information I could provide to help locate the problem?,url=https://api.github.com/repos/soot-oss/soot/issues/comments/781535355,id=781535355,nodeId=MDEyOklzc3VlQ29tbWVudDc4MTUzNTM1NQ==,createdAt=2021-02-18T18:08:33Z,updatedAt=2021-02-18T18:08:33Z]]
+1554,Replace the stack with a non-synchronized stack implementation,,
+1553,getMethods()  returns a wrong list of methods under different modifiers of class,Suppose I have 3 classes
+```
+public class A extends B {}
+
+class B extends C {
+  public void f3() {}
+}
+
+class C {
+  public void f1() {}
+  public void f2() {}
+}
+```
+
+When I use `getMethods` to return the list of methods in each class, the result is
+
+```
+A: <A: void <init>()>
+A: <A: void f3()>
+A: <A: void f2()>
+A: <A: void f1()>
+B: <B: void <init>()>
+B: <B: void f3()>
+C: <C: void <init>()>
+C: <C: void f1()>
+C: <C: void f2()>
+```
+
+It seems the result for class `A` is wrong because obviously I did not declare `f1`, `f2`, and `f3` in `A`
+
+When I add the `public` modifier to class `B` and `C`
+```
+public class A extends B {}
+
+public class B extends C {
+  public void f3() {}
+}
+
+public class C {
+  public void f1() {}
+  public void f2() {}
+}
+```
+
+The result is correct, which is:
+```
+A: <A: void <init>()>
+B: <B: void <init>()>
+B: <B: void f3()>
+C: <C: void <init>()>
+C: <C: void f1()>
+C: <C: void f2()>
+```
+,
+1552,Ambiguous method name xxx in class xx,Suppose I have a class A and a class B that extends A. Class B has a method `foo` that overrides Class A's `foo`.
+```
+class A {
+    public A foo() {return null;}
+}
+
+class B extends A {
+    public B foo() {return null;}
+}
+```
+
+When I use the following code to get class B's `foo`,  an exception is thrown saying `soot.AmbiguousMethodException: Ambiguous method name foo in class B`
+```
+SootClass B = Scene.v().loadClassAndSupport("B");
+SootMethod fooB = B.getMethodByNameUnsafe("foo");
+``` 
+
+When I print all the methods in B, the output is
+```
+<B: void <init>()>
+<B: B foo()>
+<B: A foo()>
+```
+
+Since B's `foo` overrides A's `foo`, why there are two `foo`s in B that causes the ambiguous exception?,
+1551,Passing a method's param value (read at run-time) in an InvokeExpr created in BodyTransformer?,On a high level, what I am trying to do is to instrument a method to read its input parameters' values and store them in an in-memory data structure that I have in a static class somewhere.
+
+I use an external class with static methods and a static List.
+And I have a static method which should be inserted inside the instrumented target method, read its input parameters' values, and add them to my static List.
+
+The problem is that I don't know how to write the logic to allow this static method to get the parameters' values at run-time.
+
+This is how I am creating the Stmt to insert inside the instrumented method Unit chain:
+`InvokeExpr expr = Jimple.v().newStaticInvokeExpr(method.makeRef());`
+`Stmt stmt = Jimple.v().newInvokeStmt(expr);`
+where `method` is one of those static methods I was referring to above.
+
+I thought of passing a ParameterRef as a parameter of my `method`, but I am not able to make it work.
+
+What is the recommended way to do this?
+
+
+
+
+
+,[GHIssueComment@3bd418e4[body=Hi Nicola,
+
+At the start of the method you are instrumenting (assuming you have a
+JimpleBody for it) you will find a number of IdentityStmts which assign
+from parameters into normal Local variables. You can inspect these
+IdentityStmts and see which local variable your parameter of interest ends
+up in. Then you can put that in your expr that you are creating. Let me
+know if that helps.
+
+pat
+
+
+On Tue, Feb 9, 2021 at 12:38 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> I have a class ClassWithMethods with a bunch of static methods and another
+> class implementing a BodyTransformer called MyClass.
+>
+> Inside MyClass, I create Stmt variables which I insert in the Unit chain.
+> I create these Stmt variables by using this sintax:
+> InvokeExpr expr = Jimple.v().newStaticInvokeExpr(method.makeRef()); Stmt
+> stmt = Jimple.v().newInvokeStmt(expr);
+> where method is a SootMethod created out of a ClassWithMethods's method.
+>
+> I am instrumenting a method and I would like to pass one of the input
+> parameters of this instrumented method into the above newStaticInvokeExpr.
+> How do I do this?
+>
+> On a high level, what I am trying to do is to instrument a method to read
+> its input parameters' values and store them in an in-memory data structure
+> that I have in a static class somewhere.
+>
+> —
+> You are receiving this because you are subscribed to this thread.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551>, or unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5TZFELABYXKN4QR3WLS6BYVPANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775542254,id=775542254,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU0MjI1NA==,createdAt=2021-02-08T23:49:42Z,updatedAt=2021-02-08T23:49:42Z], GHIssueComment@544820b7[body=I see what you mean. It makes sense. It doesn't look like the easiest thing to do but I will try it out. Thank you!,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775547142,id=775547142,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU0NzE0Mg==,createdAt=2021-02-09T00:01:15Z,updatedAt=2021-02-09T00:01:15Z], GHIssueComment@6b98a075[body=I have done what you suggested, which I think was finding the IdentityStms and then doing this:
+`Value val = ((IdentityStmt) stmt).getLeftOp();` to get the actual value ref. 
+First of all, is this right?
+
+I still have an issue related to soot-class-path
+
+I am doing this instrumentation in a method that implements a BodyTransformer. And every functionality of Soot works well inside there.
+I have this external class with some static methods that I am putting in those expr.
+At this point I have a method called `addFeature(Value val)`, that I would like to call with the value found above.
+
+I get a soot-class-path error (`couldn't find class: soot.Value (is your soot-class-path set properly?`) at `freudLoggerClass = Scene.v().loadClassAndSupport("instrumenter.FreudLogger");`
+where `instrumenter.FreudLogger` is the class containing `addFeature(Value val)`. 
+Do you know why that could be?
+
+This is how I am starting soot in the first place (maybe the problem is here):
+`Pack jtp = PackManager.v().getPack("jtp");`
+`jtp.add(new Transform("jtp.instrumenter", new InvokeStaticInstrumenter(args[1])));`
+`soot.Main.main(new String[]{args[0]});`
+`args[0]` and `args[1]` are two strings I'm passing to the instrumenter (they represent the names of the method that I want to instrument and that of the class that contains it).
+
+[This](https://gitlab.software.imdea.org/nicola.amadio/freud-java-instrumentation) is the repository containing the classes I am working on. If you want to have a look there to get context, the relevant classes are inside the package `instrumenter` in `src/main/java`.
+
+I have been working on this for days, I would really appreciate if you could please help me out! ,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775564789,id=775564789,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU2NDc4OQ==,createdAt=2021-02-09T00:36:39Z,updatedAt=2021-02-09T00:36:39Z], GHIssueComment@2e61d218[body=IdentityStmt: Yes, that sounds right.
+
+OK, so it looks to me like you are now mixing compile-time context with
+run-time context.
+
+Soot.Value is a compile-time container for something that doesn't
+necessarily exist at run-time. Assuming that val is a local variable of
+type Local, you can create a staticInvokeExpr and pass it val. That local
+variable has some declared type and it's that type you need to use as a
+parameter for addFeature.
+
+I feel like I could be more clear but I also would like to send this email
+as quickly as possible... let me know if that makes sense or whether I
+should try harder.
+
+On Tue, Feb 9, 2021 at 1:36 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> I have done what you suggested, which I think was finding the IdentityStms
+> and then doing this:
+> Value val = ((IdentityStmt) stmt).getLeftOp(); to get the actual value
+> ref.
+> First of all, is this right?
+>
+> I still have an issue related to soot-class-path
+>
+> I am doing this instrumentation in a method that implements a
+> BodyTransformer. And every functionality of Soot works well inside there.
+> I have this external class with some static methods that I am putting in
+> those expr.
+> At this point I have a method called addFeature(Value val), that I would
+> like to call with the value found above.
+>
+> I get a soot-class-path error (couldn't find class: soot.Value (is your
+> soot-class-path set properly?) at freudLoggerClass =
+> Scene.v().loadClassAndSupport("instrumenter.FreudLogger");
+> where instrumenter.FreudLogger is the class containing addFeature(Value
+> val).
+> Do you know why that could be?
+>
+> This is how I am starting soot in the first place (maybe the problem is
+> here):
+> Pack jtp = PackManager.v().getPack("jtp");
+> jtp.add(new Transform("jtp.instrumenter", new
+> InvokeStaticInstrumenter(args[1])));
+> soot.Main.main(new String[]{args[0]});
+> args[0] and args[1] are two strings I'm passing to the instrumenter (they
+> represent the names of the method that I want to instrument and that of the
+> class that contains it).
+>
+> This
+> <https://gitlab.software.imdea.org/nicola.amadio/freud-java-instrumentation>
+> is the repository containing the classes I am working on. If you want to
+> have a look there to get context, the relevant classes are inside the
+> package instrumenter in src/main/java.
+>
+> I have been working on this for days, I would really appreciate if you
+> could please help me out!
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775564789>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5T6TUNO53AOBSJTXGDS6B7SRANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775568294,id=775568294,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU2ODI5NA==,createdAt=2021-02-09T00:45:47Z,updatedAt=2021-02-09T00:45:47Z], GHIssueComment@3569fc08[body=OK on not passing the Value.
+
+I don't understand why I should pass the type.
+Let's say the type is `int`, what do I do with a String "int" inside my `addFeature`?
+
+By the way, earlier I was trying to pass a `Soot.Local` to `addFeature` but that was giving me the soot-class-path error as well. (in case this is what you are suggesting).
+
+Lastly, I feel like you said that I need to pass something different to `staticInvokeExpr` and `addFeature`? 
+My understanding was that whatever I pass to the first should end up being a parameter to the second.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775571711,id=775571711,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU3MTcxMQ==,createdAt=2021-02-09T00:55:38Z,updatedAt=2021-02-09T00:55:38Z], GHIssueComment@20b12f8a[body=addFeature should have a parameter of int type, not of Local type. You pass
+the Local as a parameter to addFeature (by adding it to the
+staticInvokeExpr) and Soot generates the actual parameter with the local.
+Inside addFeature you have the int with the value you want.
+
+
+On Tue, Feb 9, 2021 at 1:55 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> OK on not passing the Value.
+>
+> I don't understand why I should pass the type.
+> Let's say the type is int, what do I do with a String "int" inside my
+> addFeature?
+>
+> By the way, earlier I was trying to pass a Soot.Local to addFeature but
+> that was giving me the soot-class-path error as well. (in case this is what
+> you are suggesting).
+>
+> Lastly, I feel like you said that I need to pass something different to
+> staticInvokeExpr and addFeature?
+> My understanding was that whatever I pass to the first should end up being
+> a parameter to the second.
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775571711>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5V7EPOLOF55RHIFM7TS6CBZVANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775574447,id=775574447,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU3NDQ0Nw==,createdAt=2021-02-09T01:03:05Z,updatedAt=2021-02-09T01:03:05Z], GHIssueComment@e84a8e1[body=It works! Never thought it would work this way honestly... Kind of feels like magic.
+
+Thank you so much for the help, you really made a difference!!!,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775578915,id=775578915,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU3ODkxNQ==,createdAt=2021-02-09T01:14:43Z,updatedAt=2021-02-09T01:14:43Z], GHIssueComment@2e554a3b[body=Is there a way to have `addFeature(String varName, int varValue)`? Or is it recommended to have one method for each param?
+
+If I have `addFeature(int varValue)` and I build `InvokeExpr expr = Jimple.v().newStaticInvokeExpr(addFeature.makeRef(), myLocal)`, it works. 
+
+But I would also like to pass the variables' names.
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775583050,id=775583050,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTU4MzA1MA==,createdAt=2021-02-09T01:23:28Z,updatedAt=2021-02-09T01:26:58Z], GHIssueComment@54a67a45[body=Glad to hear that helped. You can create a StringConstant and pass that
+along to the function.
+
+On Tue, Feb 9, 2021 at 2:23 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> Is there a way to have addFeature(String varName, int varValue)?
+>
+> If I have addFeature(int varValue) and I build InvokeExpr expr =
+> Jimple.v().newStaticInvokeExpr(addFeature.makeRef(), myLocal), it works.
+>
+> But I would also like to pass the variables' names.
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775583050>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5SNEQOPPU4Z6BBUEI3S6CFCBANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775829560,id=775829560,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTgyOTU2MA==,createdAt=2021-02-09T10:19:31Z,updatedAt=2021-02-09T10:19:31Z], GHIssueComment@7d42c224[body=`InvokeExpr expr = Jimple.v().newStaticInvokeExpr(addFeatureVal.makeRef(), Arrays.asList(new StringConstant(local.getName()), local));`
+
+I've tried a bunch of different ways to write this but I didn't manage to make it work. Any tip?
+The error that I get there is that StringConstant has private access. But I was also wondering if I didn't have to write that in a whole different way.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775835543,id=775835543,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTgzNTU0Mw==,createdAt=2021-02-09T10:28:05Z,updatedAt=2021-02-09T10:29:37Z], GHIssueComment@56aaaecd[body=Have you tried StringConstant.v(local.getName)?
+
+On Tue, Feb 9, 2021 at 11:28 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> InvokeExpr expr = Jimple.v().newStaticInvokeExpr(addFeatureVal.makeRef(),
+> Arrays.asList(new StringConstant(local.getName()), local));
+>
+> I've tried a bunch of different ways to write this but I didn't manage to
+> make it work. Any tip?
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775835543>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5VKKI2PZKWDLVRIOOLS6EE4NANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775836999,id=775836999,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTgzNjk5OQ==,createdAt=2021-02-09T10:30:15Z,updatedAt=2021-02-09T10:30:15Z], GHIssueComment@522a32b1[body=Right. Fixed that.
+
+But know I get this other error:
+`No method void addFeature(String, int) in class instrumenter.FreudLogger` in:
+`addFeature = freudLoggerClass.getMethod("void addFeature(String, int)");`
+
+I tried adding `java.lang` before String in the signature but it doesn't seem to make a difference.
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775840191,id=775840191,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTg0MDE5MQ==,createdAt=2021-02-09T10:34:52Z,updatedAt=2021-02-09T10:34:52Z], GHIssueComment@35390ee3[body=Not sure. You could try getMethodByName instead, or print out the list of
+methods and see if what you expect to be there is there.
+
+On Tue, Feb 9, 2021 at 11:35 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> Right. Fixed that.
+>
+> But know I get this other error:
+> No method void addFeature(String, int) in class instrumenter.FreudLogger
+> in:
+> addFeature = freudLoggerClass.getMethod("void addFeature(String, int)");
+>
+> I tried adding java.lang before String in the signature but it doesn't
+> seem to make a difference.
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775840191>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5U3HD46EJKQHLDOUJ3S6EFVZANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775846235,id=775846235,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTg0NjIzNQ==,createdAt=2021-02-09T10:43:41Z,updatedAt=2021-02-09T10:43:41Z], GHIssueComment@5e01a982[body=Try pushing your code to your repo again... Hard to tell from here.
+
+On Tue, Feb 9, 2021, 11:55 PM Nicola Amadio <notifications@github.com>
+wrote:
+
+> Fixed also that.
+>
+> Problem now is that inside my addFeature(String name, int val), both name
+> and val contain the actual value of that variable, while I would expect
+> name to contain its name (local.getName()).
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775853539>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5V4KUP5W454ASK34NLS6EIDLANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775855489,id=775855489,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTg1NTQ4OQ==,createdAt=2021-02-09T10:58:57Z,updatedAt=2021-02-09T10:58:57Z], GHIssueComment@5ddea849[body=It seems to work now. At least that part. I now see an issue which I remember having since I started using Soot, which is that with local.getName() I get the soot name but not the actual variable name.
+
+I tried once compiling with the `-d` option but didn't work for me.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775867490,id=775867490,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTg2NzQ5MA==,createdAt=2021-02-09T11:20:48Z,updatedAt=2021-02-09T11:20:48Z], GHIssueComment@5ee2b6f9[body=Yeah you need to preserve original names (using the option) for that, and
+they may not exist due to compilation.
+
+On Wed, Feb 10, 2021, 12:21 AM Nicola Amadio <notifications@github.com>
+wrote:
+
+> It seems to work now. At least that part. I now see an issue which I
+> remember having since I started using Soot, which is that with
+> local.getName() I get the soot name but not the actual variable name.
+>
+> I tried once compiling with the -d option but didn't work for me.
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1551#issuecomment-775867490>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5TZCDVIR3AFJJBREDTS6ELCBANCNFSM4XJ56HWA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/775868243,id=775868243,nodeId=MDEyOklzc3VlQ29tbWVudDc3NTg2ODI0Mw==,createdAt=2021-02-09T11:22:10Z,updatedAt=2021-02-09T11:22:10Z]]
+1550,Make FoundFile accessible,,
+1549,java.lang.StackOverflowError for emitUnits,Hi, 
+When I try to generate the jimple files from .class,  the StackOverflowError exception happens:
+
+Exception in thread "Thread-0" Exception in thread "main" java.lang.StackOverflowError
+	at soot.asm.AsmMethodSource.emitUnits(AsmMethodSource.java:1938)
+	at soot.asm.AsmMethodSource.emitUnits(AsmMethodSource.java:1938)
+	at soot.asm.AsmMethodSource.emitUnits(AsmMethodSource.java:1938)
+	at soot.asm.AsmMethodSource.emitUnits(AsmMethodSource.java:1938)
+	at soot.asm.AsmMethodSource.emitUnits(AsmMethodSource.java:1938)
+----------------------------------------------------------------------------------------------
+The commands: 
+`Options.v().set_no_bodies_for_excluded(true);
+Options.v().set_allow_phantom_refs(true);
+Options.v().set_output_format(Options.output_format_jimple);
+
+Options.v().set_process_dir(Collections.singletonList("D:\\classes"));
+Options.v().set_src_prec(Options.src_prec_only_class);
+
+Options.v().set_keep_line_number(true);
+
+Scene.v().loadNecessaryClasses();
+
+PackManager.v().writeOutput();`
+
+calsses files:
+[classes.zip](https://github.com/soot-oss/soot/files/5938108/classes.zip)
+
+,[GHIssueComment@23d1e5d0[body=In version 4.0.0, I got the same problem.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/811813491,id=811813491,nodeId=MDEyOklzc3VlQ29tbWVudDgxMTgxMzQ5MQ==,createdAt=2021-04-01T10:26:48Z,updatedAt=2021-04-01T10:26:48Z]]
+1548,Bump ant from 1.10.8 to 1.10.9,Bumps ant from 1.10.8 to 1.10.9.
+
+
+[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=org.apache.ant:ant&package-manager=maven&previous-version=1.10.8&new-version=1.10.9)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)
+
+Dependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+<details>
+<summary>Dependabot commands and options</summary>
+<br />
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating it. You can achieve the same result by closing it manually
+- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot use these labels` will set the current labels as the default for future PRs for this repo and language
+- `@dependabot use these reviewers` will set the current reviewers as the default for future PRs for this repo and language
+- `@dependabot use these assignees` will set the current assignees as the default for future PRs for this repo and language
+- `@dependabot use this milestone` will set the current milestone as the default for future PRs for this repo and language
+
+You can disable automated security fix PRs for this repo from the [Security Alerts page](https://github.com/soot-oss/soot/network/alerts).
+
+</details>,
+1547,PDG implementation,I found this Program Dependence Graph (PDG) implementation, but I didn't find any packages in the soot specification. Does anyone know how to use it?
+
+For example:
+
+```
+public static void main(String[] args) {
+  PackManager.v().getPack("jtp").add(
+    new Transform("jtp.myTransform", new BodyTransformer() {
+      protected void internalTransform(Body body, String phase, Map options) {
+        new LocalMustNotAliasAnalysis(new ExceptionalUnitGraph(body));
+      }
+    }));
+  soot.Main.main(args);
+}
+```
+Links:
+
+PDG: https://github.com/soot-oss/soot/tree/4a04145d1a4d2713ef2733e33abd5ba77b2fd848/src/main/java/soot/toolkits/graph/pdg
+
+Packages: https://soot-build.cs.uni-paderborn.de/public/origin/develop/soot/soot-develop/options/soot_options.htm
+
+Example: https://github.com/soot-oss/soot/wiki/Implementing-an-intra-procedural-data-flow-analysis-in-Soot
+
+Thanks :D,
+1546,PDG implementation,I found this Program Dependence Graph (PDG) implementation, but I didn't find any packages in the soot specification. Does anyone know how to use it?
+
+For example:
+
+public static void main(String[] args) {
+  PackManager.v().getPack("jtp").add(
+    new Transform("jtp.myTransform", new BodyTransformer() {
+      protected void internalTransform(Body body, String phase, Map options) {
+        new LocalMustNotAliasAnalysis(new ExceptionalUnitGraph(body));
+      }
+    }));
+  soot.Main.main(args);
+}
+Links:
+
+PDG: https://github.com/soot-oss/soot/tree/4a04145d1a4d2713ef2733e33abd5ba77b2fd848/src/main/java/soot/toolkits/graph/pdg
+
+Packages: https://soot-build.cs.uni-paderborn.de/public/origin/develop/soot/soot-develop/options/soot_options.htm
+
+Example: https://github.com/soot-oss/soot/wiki/Implementing-an-intra-procedural-data-flow-analysis-in-Soot
+
+Thanks :D,
+1545,Not able to disable body transformers when producing jimple,I noticed that there are a few body transformers are used in `PackManager.java` without checking if the options are disabled when producing jimple (see below). This is inconsistent to the normal usage in JimpleBodyPack through `PackManager.v().getTransform("jb.cp").apply(b);`
+
+The question is, is this intentionally? I came across this, since sometimes you might want to disable the transformers, e.g. variables that are only used once won't be optimized. 
+ 
+https://github.com/soot-oss/soot/blob/develop/src/main/java/soot/PackManager.java#L1000
+
+```
+  if (produceJimple) {
+        Body body = m.retrieveActiveBody();
+        // Change
+        CopyPropagator.v().transform(body);
+        ConditionalBranchFolder.v().transform(body);
+        UnreachableCodeEliminator.v().transform(body);
+        DeadAssignmentEliminator.v().transform(body);
+        UnusedLocalEliminator.v().transform(body);
+```
+@anddann @mbenz89  any opinion on this?,[GHIssueComment@704f1591[body=Yes, that is intentional. Without them the produced code would be quite
+bloated due to the transformation from bytecode to three address code and
+back again. You can try to comment them out and inspect the generated code.
+
+On Wed, Feb 3, 2021, 6:46 AM Linghui Luo <notifications@github.com> wrote:
+
+> I noticed that there are a few body transformers are used in
+> PackManager.java without checking if the options are disabled when
+> producing jimple (see below). This is inconsistent to the normal usage in
+> JimpleBodyPack through PackManager.v().getTransform("jb.cp").apply(b);
+>
+> The question is, is this intentionally?
+>
+> https://github.com/soot-oss/soot/blob/develop/src/main/java/soot/PackManager.java#L1000
+>
+>   if (produceJimple) {
+>         Body body = m.retrieveActiveBody();
+>         // Change
+>         CopyPropagator.v().transform(body);
+>         ConditionalBranchFolder.v().transform(body);
+>         UnreachableCodeEliminator.v().transform(body);
+>         DeadAssignmentEliminator.v().transform(body);
+>         UnusedLocalEliminator.v().transform(body);
+>
+> @anddann <https://github.com/anddann> @mbenz89
+> <https://github.com/mbenz89> any opinion on this?
+>
+> —
+> You are receiving this because you are subscribed to this thread.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1545>, or unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5WLTWEZP7TFDOIZOH3S5A26VANCNFSM4W7FPMLA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/772065957,id=772065957,nodeId=MDEyOklzc3VlQ29tbWVudDc3MjA2NTk1Nw==,createdAt=2021-02-02T22:46:34Z,updatedAt=2021-02-02T22:46:34Z], GHIssueComment@58fb7731[body=@patricklam Thank you for your answer! I know it is for optimization purpose. However, I feel this way of using the transformers makes the soot phase options useless if people don't want to modify the code by themselves. Yesterday a colleague of mine asked if he could turn off some jimple body transformers such as the CopyPropagator because he wants to perform constant propagation for students, but soot optimizes the local variables.  I pointed him to use `Options.v().setPhaseOption("jb.cp", "enabled:false");`. However, this didn't help due to the direct usage of the transformers as I pointed out above. ,url=https://api.github.com/repos/soot-oss/soot/issues/comments/772313472,id=772313472,nodeId=MDEyOklzc3VlQ29tbWVudDc3MjMxMzQ3Mg==,createdAt=2021-02-03T07:59:36Z,updatedAt=2021-02-03T07:59:36Z], GHIssueComment@13e547a9[body=There's just no normal usage where you'd want to disable it. There could be
+pedagogical usage, so it may be appropriate to have them be disablable by
+an option.
+
+On Wed, Feb 3, 2021 at 8:59 PM Linghui Luo <notifications@github.com> wrote:
+
+> @patricklam <https://github.com/patricklam> Thank you for your answer! I
+> know it is for optimization purpose. However, I feel this way of using the
+> transformers makes the soot phase options useless if people don't want to
+> modify the code by themselves. Yesterday a colleague of mine asked if he
+> could turn off some jimple body transformers such as the CopyPropagator
+> because he wants to perform constant propagation for students, but soot
+> optimizes the local variables. I pointed him to use Options.v().setPhaseOption("jb.cp",
+> "enabled:false");. However, this didn't help due to the direct usage of
+> the transformers as I pointed out above.
+>
+> —
+> You are receiving this because you were mentioned.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/soot-oss/soot/issues/1545#issuecomment-772313472>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOKE5SUTAON3A64CGR2YI3S5D67TANCNFSM4W7FPMLA>
+> .
+>
+,url=https://api.github.com/repos/soot-oss/soot/issues/comments/773620100,id=773620100,nodeId=MDEyOklzc3VlQ29tbWVudDc3MzYyMDEwMA==,createdAt=2021-02-04T21:37:54Z,updatedAt=2021-02-04T21:37:54Z]]
+1544,Java.lang.RuntimeException error when trying to output JIMPLE codes from .class files,Hi :
+
+When I try to run the following command, where "/home/input" is the directory that contains my test package, that has "Foo.class" file compiled. 
+
+`java -jar soot-4.2.1-jar-with-dependencies.jar -f j -src-prec c Foo -cp /home/input
+`
+
+I got the following error:
+
+`Soot started on Tue Feb 02 19:19:19 TRT 2021
+java.lang.RuntimeException: None of the basic classes could be loaded! Check your Soot class path!
+	at soot.Scene.loadBasicClasses(Scene.java:1755)
+	at soot.Scene.loadNecessaryClasses(Scene.java:1845)
+	at soot.Main.run(Main.java:241)
+	at soot.Main.main(Main.java:141)
+`
+
+My "JAVA_HOME " environment variable is set to "usr/lib/jvm/java-8-openjdk-amd64/"
+
+Thanks.
+,
+1543,Close-source app crash after instrumentation.,I used the script mentioned in #1542 to instrument close-source apks (e.g., com.handmark.expressweather, com.indeed.android.jobsearch, com.prayapp.client, etc.). Many apps crashed at runtime and I could see the message `Caused by: java.lang.ClassNotFoundException: Didn't find class "java.lang.invoke.MethodHandles$Lookup" on path`.,
+1542,Soot instrumentation fails on apks that use gms library,I am using soot to instrument close-source apps crawled from the Google Play store. It turns out most of the output apks behaves abnormally on Android emulators. To make sure the error is not made by my code, I used the following code to "instrument" these apps. The following code snippet should output an "identical" apk as it basically does nothing.
+
+```
+public static void main(String[] args) {
+    Options.v().set_src_prec(Options.src_prec_apk);
+    Options.v().set_output_format(Options.output_format_dex);
+    Options.v().set_output_dir(args[1]);
+    Options.v().set_allow_phantom_refs(true);
+    Options.v().set_force_android_jar(ANDROID_JAR_PATH);
+    Options.v().set_android_api_version(SDK_VERSION);
+    Options.v().set_force_overwrite(true);
+    Options.v().set_whole_program(true);
+    Options.v().set_process_multiple_dex(true);
+    Options.v().set_ignore_resolution_errors(true);
+    Options.v().set_soot_classpath(ANDROID_JAR_PATH + ":" + RT_JAR);
+    String[] sootargs = new String[] {
+		    "-p", "jb.uce", "enabled:false",
+		    "-p", "jb.tt", "enabled:true",
+		    "-p", "jj.uce", "enabled:false",
+		    "-p", "wjpp", "enabled:false",
+		    "-p", "cg", "enabled:false",
+		    "-p", "wjtp", "enabled:false",
+		    "-p", "wjop", "enabled:false",
+		    "-p", "wjap", "enabled:false",
+		    "-p", "jop", "enabled:false",
+		    "-p", "jap", "enabled:false",
+		    "-p", "bb", "enabled:false",
+		    "-p", "tag", "enabled:false",
+		    "-process-dir", args[0],
+    };
+    
+    PackManager.v().getPack("jtp").add(new Transform("jtp.MethodTransformer", new BodyTransformer() {
+    
+	    @Override
+	    protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
+		    
+	    }
+	    
+    }));
+    
+    soot.Main.main(sootargs);
+}
+```
+
+I observed the instrumentation fails on apks that use the Google gms library. For example, I often see such error message when I ran the instrumented apps on Android emulators:
+```
+Caused by: java.lang.ClassCastException: com.google.android.gms.internal.ads.zzamc cannot be cast to com.google.android.gms.internal.ads.zzalx
+```
+
+When I inspected the apk with the help of JD-GUI, I found soot mistakenly generates a line of code like `public static final zzalx<JSONObject> zzdio = (zzalx)new zzamc();` where the cast does not appear in the original app code.
+,
+1539,How to obtain all references to a SootField?,I can use `SimpleLocalDefs` or `SimpleLocalUses` to get reference to `Local`, however, totally have no idea how to obtain all references to a `SootField`. Does I need to scan each `Unit` for such goal?
+
+Thanks!,[GHIssueComment@3fb6cf60[body=OK, I scan each `Unit` at last to solve this problem.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/768860453,id=768860453,nodeId=MDEyOklzc3VlQ29tbWVudDc2ODg2MDQ1Mw==,createdAt=2021-01-28T07:33:07Z,updatedAt=2021-01-28T07:33:07Z]]
+1538,Fixed message for invalid value,For example, it should be `Invalid value 19 given for option -java-version` instead of `Invalid value java-version given for option -19`,
+1537,Tamiflex also supports "Array.newInstance"...,Tamiflex also supports "Array.newInstance", "Method.getModifiers" and "Method.getName".  To avoid a crash bug when load reflection logs generated by Tamiflex, we need to append these lines.,
+1536,FIx NPE on invalid edges,,
+1535,Log error and proceed in OnFlyCallgraph,,[GHIssueComment@37ddb69a[body=We have an open issue with the type assigner, which fails for certain casts between ``java.lang.Object`` and array types. Unfortunately, corner cases with the type assigner come up every now and then.
+
+We need to fix the root cause in each case, but in large evaluations or productive environments, it's better to carry on with a potentially incomplete callgraph than fail altogether and never get to an evaluation because you're stuck in fixing stuff. We need to make this lenient behavior an option, though.,url=https://api.github.com/repos/soot-oss/soot/issues/comments/761212114,id=761212114,nodeId=MDEyOklzc3VlQ29tbWVudDc2MTIxMjExNA==,createdAt=2021-01-15T21:38:30Z,updatedAt=2021-01-15T21:38:30Z]]
+1534,SparkTransformer vs PackManager,I am using Spark to obtain the possible types of variables in a Java program. 
+In the documentation it says that SparkTransformer is the main entry point for Spark, but I have noticed the following:
+
+Option 1:
+If I use` SparkTransformer.v().transform("",opt)` (with some options opt)  and then print the jimple code and the possible types I get the following
+
+```
+Units:
+(1) r5 := @parameter0: java.lang.String[]
+(2) r6 = null
+(3) i2 = 0
+(4) goto [?= (branch)]
+(5) $r0 = new java.lang.Object
+(6) specialinvoke $r0.<java.lang.Object: void <init>()>()
+(7) r1 = $r0
+(8) $i0 = virtualinvoke r1.<java.lang.Object: int hashCode()>()
+(9) $i1 = $i0 % 2
+(10) if $i1 != 0 goto $r2 = new java.util.TreeSet
+(11) $r3 = new java.util.HashSet
+(12) specialinvoke $r3.<java.util.HashSet: void <init>()>()
+(13) r6 = $r3
+(14) goto [?= i2 = i2 + 1]
+(15) $r2 = new java.util.TreeSet
+(16) specialinvoke $r2.<java.util.TreeSet: void <init>()>()
+(17) r6 = $r2
+(18) i2 = i2 + 1
+(19) if i2 < 100000 goto $r0 = new java.lang.Object
+(20) interfaceinvoke r6.<java.util.Set: boolean add(java.lang.Object)>(" a ")
+(21) interfaceinvoke r6.<java.util.Set: boolean add(java.lang.Object)>(" b ")
+(22) interfaceinvoke r6.<java.util.Set: boolean add(java.lang.Object)>(" c ")
+(23) $r4 = <java.lang.System: java.io.PrintStream out>
+(24) virtualinvoke $r4.<java.io.PrintStream: void println(java.lang.Object)>(r6)
+(25) return
+--------------
+Locals:
+$r0 : java.lang.Object
+possible types: [java.lang.Object]
+r1 : java.lang.Object
+possible types: [java.lang.Object]
+$i0 : int
+possible types: []
+$i1 : int
+possible types: []
+$r2 : java.util.TreeSet
+possible types: [java.util.TreeSet]
+$r3 : java.util.HashSet
+possible types: [java.util.HashSet]
+$r4 : java.io.PrintStream
+possible types: []
+r5 : java.lang.String[]
+possible types: [java.lang.String[]]
+r6 : java.util.AbstractSet
+possible types: [java.util.HashSet, java.util.TreeSet]
+i2 : int
+possible types: []
+--------------
+PointsToAnalysis: class soot.jimple.spark.pag.PAG
+--------------
+TOTAL TIME: 22290 ms
+```
+
+Option 2:
+If instead I use 
+
+```
+Options.v().setPhaseOption("cg", "on");
+Options.v().setPhaseOption("cg.spark", "on");
+Options.v().setPhaseOption("cg.spark", "enabled:true");
+Options.v().setPhaseOption("cg.spark", "verbose:true");
+Options.v().setPhaseOption("cg.spark", "on-fly-cg:true");
+Options.v().setPhaseOption("cg.spark", "apponly:true");
+Options.v().set_output_format(Options.output_format_jimple);
+```
+
+and then I call
+
+`PackManager.v().runPacks();`
+
+I get the following:
+
+```
+Units:
+(1) r5 := @parameter0: java.lang.String[]
+(2) r6 = null
+(3) i2 = 0
+(4) goto [?= (branch)]
+(5) $r0 = new java.lang.Object
+(6) specialinvoke $r0.<java.lang.Object: void <init>()>()
+(7) $i0 = virtualinvoke $r0.<java.lang.Object: int hashCode()>()
+(8) $i1 = $i0 % 2
+(9) if $i1 != 0 goto $r2 = new java.util.TreeSet
+(10) $r3 = new java.util.HashSet
+(11) specialinvoke $r3.<java.util.HashSet: void <init>()>()
+(12) r6 = $r3
+(13) goto [?= i2 = i2 + 1]
+(14) $r2 = new java.util.TreeSet
+(15) specialinvoke $r2.<java.util.TreeSet: void <init>()>()
+(16) r6 = $r2
+(17) i2 = i2 + 1
+(18) if i2 < 100000 goto $r0 = new java.lang.Object
+(19) interfaceinvoke r6.<java.util.Set: boolean add(java.lang.Object)>(" a ")
+(20) interfaceinvoke r6.<java.util.Set: boolean add(java.lang.Object)>(" b ")
+(21) interfaceinvoke r6.<java.util.Set: boolean add(java.lang.Object)>(" c ")
+(22) $r4 = <java.lang.System: java.io.PrintStream out>
+(23) virtualinvoke $r4.<java.io.PrintStream: void println(java.lang.Object)>(r6)
+(24) return
+--------------
+Locals:
+$r0 : java.lang.Object
+possible types: [java.lang.Object]
+$i0 : int
+possible types: []
+$i1 : int
+possible types: []
+$r2 : java.util.TreeSet
+possible types: [java.util.TreeSet]
+$r3 : java.util.HashSet
+possible types: [java.util.HashSet]
+$r4 : java.io.PrintStream
+possible types: []
+r5 : java.lang.String[]
+possible types: [java.lang.String[]]
+r6 : java.util.AbstractSet
+possible types: [java.util.HashSet, java.util.TreeSet]
+i2 : int
+possible types: []
+--------------
+PointsToAnalysis: class soot.jimple.spark.pag.PAG
+--------------
+TOTAL TIME: 2288 ms
+```
+
+
+So I get the same results (the second option even optimizes the unnecessary variable r1 away) but the second option runs approximately 20 seconds faster, although both options use the same PointsToAnalysis implementation (class soot.jimple.spark.pag.PAG)
+
+What is the main difference of using Spark in those two ways and what are the benefits of using the first way? Are there reasons to use the 
